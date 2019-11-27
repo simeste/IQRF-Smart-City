@@ -1,2 +1,4 @@
 # IQRF-Smart-City
-IQRF Smart City project at NTNU in Gjøvik.
+IQRF Smart City prosjekt på NTNU i Gjøvik.
+
+Les manualen for å forstå hvordan byen fungerer.
