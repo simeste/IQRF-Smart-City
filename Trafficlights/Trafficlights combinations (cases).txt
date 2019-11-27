@@ -1,0 +1,90 @@
+Trafikklys
+----------------------
+* Alle har PCMD 0x21 og HWPID = 0xFFFF
+* Kombinasjonene vil være ulike for 2 og 2 av trafikklysene
+* Hovedsaklig brukes kun Pdata[0] (for å bytte case), 
+  men for å resette alle overgangene trådløst kan Pdata[0] = 0xFF
+  og Pdata[1] = 0xFF brukes. Altså Pdata[] = [0xFF, 0xFF].
+* For "arbeidsmodus" i case 0x09 med blinkende lys, brukes også Pdata[1].
+  Da til å bestemme antall ganger det skal blinkes.
+  Det er kun programmert en sperre på nettsiden og ikke på trancieveren.
+  Eksempel blinkende gult lys 20 ganger: Pdata[] = [0x09, 0x14].
+
+
+
+Case		1SHR (vest og øst)	2SHR (nord og sør)
+----------------------------------------------------------
+Case 0x01	Rødt lys		Grønt lys rett frem
+					Grønt lys venstre
+
+Case 0x02	Rødt lys		Gult lys rett frem
+					Gult lys venstre
+
+Case 0x03	Rødt lys		Rødt lys rett frem
+		Gult lys		Rødt lys venstre
+
+Case 0x04	Grønt lys		Rødt lys rett frem
+					Rødt lys venstre
+
+Case 0x05	Gult lys		Rødt lys rett frem
+					Rødt lys venstre
+
+Case 0x06	Rødt lys		Rødt lys rett frem
+					Rødt lys venstre
+					Gult lys rett frem
+					Gult lys venstre
+
+----------------- tilbake til case 0x01 igjen -----------------
+
+Case 0x07	Rødt lys		Grønt lys rett frem
+		Grønn mann vest og øst	Grønt lys venstre
+					Rød mann nord og sør
+
+Case 0x08	Grønt lys		Rødt lys rett frem
+		Rød mann vest og øst	Rødt lys venstre
+					Grønn mann nord og sør
+
+Case 0x09	Gult lys blinkende	Gult lys blinkende
+
+Case 0xFF	Forrige verdi		Forrige verdi
+		Sjekker om noen skal	Sjekker om noen skal
+		over vegen		over vegen
+	
+
+===============================================================
+
+
+EW 1SHR - bit plassering
+------------------------
+0b	8 7 6 5 4 3 2 1			data
+
+1:	Red man 	right		0b00000001
+2:	Green man	right		0b00000010
+3:	Red		forward		0b00000100
+4:	Yellow		forward		0b00001000
+5:	Green		forward		0b00010000
+6:	Red man		left		0b00100000
+7:	Not used
+8:	Green man	left		0b10000000
+
+Example green men and red light:	0b10000110
+
+
+NS 2SHR - bit plassering
+------------------------
+0b	8  7  6  5  4  3  2  1		data
+0b	16 15 14 13 12 11 10 9		data1
+
+1:	Red man 	right		0b00000000 00000001
+2:	Green man 	right		0b00000000 00000010
+3:	Red 		left		0b00000000 00000100
+4:	Yellow 		left		0b00000000 00001000
+5:	Green 		left		0b00000000 00010000
+6: 	Red 		forward		0b00000000 00100000
+7:	Yellow		forward		0b00000000 01000000
+8:	Green 		forward		0b00000000 10000000
+9:	Red man		left		0b00000001 00000000
+10:	Green man	left		0b00000010 00000000
+11-16:	Not used
+
+Example green men and red lights:	0b00000010 00100110
